@@ -1,6 +1,6 @@
 #!/bin/bash
 export LC_ALL=C
-input="Laporan-TokoShiSop.tsv"
+input="/home/zaki/Downloads/Laporan-TokoShiSop.tsv"
 
 
 #Jawaban 2a
@@ -9,7 +9,7 @@ awk -F "\t" '
 BEGIN{ max=0;idmax=0}
 {
 	{if(NR!=1)
-		profitpercentage=($21/($18-$21))*100
+		profitpercentage=(($21/($18-$21))*100)
 		id=$1
 		{if(profitpercentage>=max)
 			{
@@ -30,12 +30,12 @@ BEGIN{printf "Daftar nama customer di Albuquerque pada tahun 2017 antara lain: \
 	{if(NR!=1)
 		{
 			{if($10~"Albuquerque" && $3 ~ /17$/)
-					print $7 
+					a[$7]++
 			}
 		}
 	}
 }
-END{printf "\n"}
+END{ for(b in a){ print b} {printf "\n"}}
 ' "$input" >> hasil.txt
 
 #Jawaban 2c
