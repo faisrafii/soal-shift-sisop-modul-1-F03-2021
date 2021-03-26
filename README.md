@@ -3,7 +3,13 @@
 ## NO 1 
 
 ## NO 2 : TokoShiShop
-### 2a
+Pada pengerjaan soal no 2 ini, dibutuhkan data TokoShiSop. Sehingga dilakukan input file data tersebut yaitu "Laporan-TokoShiSop.tsv"
+```
+export LC_ALL=C
+input="/home/zaki/Downloads/Laporan-TokoShiSop.tsv"
+```
+
+### 2a 
 Steven ingin mengetahui Row ID dan profit percentage terbesar
 ```
 awk -F "\t" '
@@ -20,14 +26,13 @@ BEGIN{ max=0;idmax=0}
 		}
 	}
 }
-END{printf "Transaksi terakhir dengan profit percentage terbesar yaitu %d dengan persentase  %.2f%%.\n\n", idmax, max}
-' "$input" >> hasil.txt
+END
 ```
 - Proses akan dilakukan ketika Baris != 1
 - Presentase profit didapatkan dengan membagi kolom profit dengan pengurangan sales dengan profit, kemudian dikalikan dengan 100
 - Id dimulai dari angka 1
-- Lalu dilakukan pengecekan profit maksimal
-- Setelah semua data selesai dicek, maka hasilnya akan disimpan dalam file hasil.txt
+- Lalu dilakukan pengecekan untuk mendapatkan profit maksimal sampai semua data yang ada selesai dicek dengan cara setiap pengecekan apakah presentase profit lebih besar dari
+  profit terbesar sekarang. Jika iya maka profit terbesar akan diubah beserta idnya, dengan inisialisasi awal profit terbesar dan id adalah 0. 
 
 ### 2b
 Clemong membutuhkan daftar nama customer pada transaksi tahun 2017 di Albuquerque.
@@ -43,9 +48,10 @@ BEGIN{printf "Daftar nama customer di Albuquerque pada tahun 2017 antara lain: \
 		}
 	}
 }
-END{ for(b in a){ print b} {printf "\n"}}
-' "$input" >> hasil.txt
+END
 ```
+- Proses akan dilakukan ketika Baris != 1
+- Dilakukan pengecekan apakah kolom 10 atau _city_ adalah Alburquerque dan kolom 3 atau_ date _ adalah pada tahun 2017, maka _customer name_ akan disimpan ke dalam array
 
 ### 2c
 Clemong membutuhkan segment customer dan jumlah transaksinya yang paling sedikit.
@@ -65,18 +71,11 @@ BEGIN{consumer=0;homeoffice=0;corp=0}
 		}
 	}
 }
-END{
-	printf "Tipe segmen customer yang penjualannya paling sedikit adalah "
-	{if(consumer < homeoffice && consumer < corp)
-		printf "Consumer dengan %d transaksi.\n\n",consumer
-	 else if(homeoffice < consumer && homeoffice < corp)
-	 	printf "Home Office dengan %d transaksi.\n\n", homeoffice
-	 else if(corp < homeoffice && corp < consumer)
-	 	printf "Corporate dengan %d transaksi.\n\n", corp
-	}
-}
-' "$input" >> hasil.txt
+END
 ```
+- Proses akan dilakukan ketika Baris != 1
+- Dilakukan pengecekan apakah kolom 8 atau _segmen_ adalah "Consumer" bukan. Jika iya maka akan dilakukan penjumlahan variabel consumer dimana variabel tersebut berguna untuk menyimpan jumlah _segmen_ yang bertipe Customer pada data Laporan-TokoShiSop.tsv
+- Pengecekan yang sama juga dilakukan untuk _segmen_ bertipe Home Office dan Corporate
 
 ### 2d
 Wilayah bagian (region) yang memiliki total keuntungan (profit) paling sedikit dan total keuntungan wilayah tersebut.
@@ -122,8 +121,44 @@ END{
 }
 ' "$input" >> hasil.txt
 ```
+- Proses akan dilakukan ketika Baris != 1
+- 
 
 ### 2e
 Membuat sebuah script yang akan menghasilkan file “hasil.txt”
+```
+{printf "Transaksi terakhir dengan profit percentage terbesar yaitu %d dengan persentase  %.2f%%.\n\n", idmax, max}
+' "$input" >> hasil.txt
+```
+Menyimpan id dan persentase profit terbesar ke dalam file "hasil.txt"
+
+```
+{ for(b in a){ print b} {printf "\n"}}
+' "$input" >> hasil.txt
+```
+Semua _customer name_ yang ada pada array a disimpan ke dalam file "hasil.txt"
+
+```
+{
+	printf "Tipe segmen customer yang penjualannya paling sedikit adalah "
+	{if(consumer < homeoffice && consumer < corp)
+		printf "Consumer dengan %d transaksi.\n\n",consumer
+	 else if(homeoffice < consumer && homeoffice < corp)
+	 	printf "Home Office dengan %d transaksi.\n\n", homeoffice
+	 else if(corp < homeoffice && corp < consumer)
+	 	printf "Corporate dengan %d transaksi.\n\n", corp
+	}
+}
+' "$input" >> hasil.txt
+```
+Data jumlah Segmen bertipe Customer, Home Ofiice, dan Corperate yang didapatkan dibandingkan mana yang paling besar dari ketiga data tersebut dan kemudian hasilnya disimpan ke dalam file "hasil.txt"
+
+```
+{printf "Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah %s dengan total keuntungan %.2f\n",regionmin, arr[regionmin]}
+}
+' "$input" >> hasil.txt
+```
+Menyimpan wilayah dengan total profit paling sedikit beserta total profitnya ke dalam file "hasil.txt"
+
 
 ## NO 3
