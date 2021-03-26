@@ -1,6 +1,13 @@
 # soal-shift-sisop-modul-1-F03-2021
 
 ## NO 1 
+Pada pengerjaan soal no 1 ini, dibutuhkan data dari syslog.log. Sehingga dilakukan input file data tersebut yaitu
+```
+input="syslog.log"
+```
+
+### 1a
+Untuk mengumpulkan informasi dari syslog berupa jenis log (ERROR/INFO), pesan log, dan username pada setiap baris lognya. Diperluakn
 
 ## NO 2 : TokoShiShop
 Pada pengerjaan soal no 2 ini, dibutuhkan data TokoShiSop. Sehingga dilakukan input file data tersebut yaitu "Laporan-TokoShiSop.tsv"
