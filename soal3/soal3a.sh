@@ -1,19 +1,19 @@
 #!/bin/bash
 
-namafile=" "
-
-data_namafile () {
-if [ $1 -le 9 ]
-then
-        namafile="Koleksi_0$1.jpg"
-else
-        namafile="Koleksi_$1.jpg"
-fi
-}
-
-
-for ((i=1; i<24; i++))
+for ((num=1; num<=23; num++))
 do
-        data_namafile "$i"
-        wget -O $namafile https://loremflickr.com/320/240/kitten >> foto.log
+        wget -O "Koleksi_$num.jpg" https://loremflickr.com/320/240/kitten 2>> Foto.log 
+done
+
+for ((i=1; i<=23; i++))
+do
+        for ((j=i+1; j<=23; j++))
+        do
+                cek=$(cmp "Koleksi_$i.jpg" "Koleksi_$j.jpg")
+                beda=$?
+                if [ $beda -eq 0 ]
+                then
+                        rm Koleksi_$j.jpg
+                fi
+        done
 done
