@@ -318,7 +318,7 @@ Menyimpan wilayah dengan total profit paling sedikit beserta total profitnya ke 
 ### 3a
 Membuat script untuk mengunduh 23 gambar dari "https://loremflickr.com/320/240/kitten"
 kemudian menyimpan log-nya ke file "Foto.log". dengan syarat
-gambar tidak boleh sama dan penamaan harus Koleksi_01, dst
+gambar tidak boleh sama dan penamaan harus Koleksi_01, dan seterusnya.
 ```bash
 size=23
 for(( i=1 ; i<=size; i++ ))
@@ -351,6 +351,46 @@ do
 	fi
 done
 ```
+#### PENJELASAN 3a
+
+```bash
+wget -O "Koleksi_$i" -a "Foto.log" https://loremflickr.com/320/240/kitten
+```
+`wget` untuk mengunduh gambar, `-O` agar gambar yang diunduh Original, `-a` agar alamat unduhan yang tampil
+di terminal ketika dijalankan dimasukkan ke dalam file "Foto.log"
+
+```bash
+if [[ j -lt 10 ]]
+		then
+			if cmp -s "Koleksi_$i" "Koleksi_0$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+			fi
+		else
+			if cmp -s "Koleksi_$i" "Koleksi_$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+				break
+			fi
+		fi
+```
+Command diatas berfungsi untuk melakukan pengecekan terhadap foto yang duplicate setelah di download, 
+dengan cara melakukan perbandingan dengan command `cmp` kemudian membandingkan dengan foto ke i dan j atau sebelum dan sesudahnya,
+command diatas memiliki dua syarat karena penamaan file yang satuan (tedapat angak 0 dideoan) dan non satuan,
+ketika terdapat yang sama maka akan di hapus dengan menggunakan command `rm`.
+
+```bash
+if [[ i -lt 10 ]]
+	then
+		mv "Koleksi_$i" "Koleksi_0$i"
+	fi
+```
+untuk mengganti nama file dari `koleksi_$i` menjadi `Koleksi_0$i` di tambahkan dengan 0 didalamnya karena satuan yang dimulai dari `i -lt 10`.
+untuk mengganti nama file sendiri menggunakan command `mv`.
 
 ### 3b 
 Menjalankan script sehari sekali pada jam 8 malam dengan syarat
