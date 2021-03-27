@@ -1,5 +1,11 @@
 # soal-shift-sisop-modul-1-F03-2021
 
+Nama Anggota | NRP
+------------------- | --------------		
+Dias Tri Kurniasari | 05111940000035
+Akmal Zaki Asmara | 05111940000154
+M. Fikri Sandi Pratama | 05111940000195
+
 ## NO 1 
 Pada pengerjaan soal no 1 ini, dibutuhkan data dari syslog.log. Sehingga dilakukan input file data tersebut yaitu
 ```bash
