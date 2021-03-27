@@ -37,6 +37,8 @@ Regex diatas terbagi menjadi 3 bagian yaitu :
 2. (.*) akan mengambil karakter sembarang dengan jumlah 0 hingga tak terbatas setelah ERROR atau INFO dan menjadikannya sebagai regex group 2 yang akan menampilkan pesan log
 3. \((.*)\) akan mengambil karakter sembarang dengan jumlah 0 hingga tak terbatas setelah group 2 dan setelah karakter '(' dan sebelum karakter ')' dan menjadikannya sebagai regex group 3 yang akan menampilkan username
 
+- - - -
+
 ### 1b
 Untuk menampilkan pesan error dan jumlah kemunculannya, maka kita dapat memodifikasi regex sebelumnya menjadi :
 ```bash
@@ -68,6 +70,8 @@ Fungsi `get_error_log` akan dijalankan setiap pembacaan line pada input yaitu sy
 
 Hasil dari proses filtering menggunakan regex diurutkan dengan `sort` agar dapat diambil jumlah pesan yang berbeda dengan `uniq -c`. Setelah dicari jumlah pesan berbeda, hasil di sort kembali berdasarkan angka dengan `sort -n` dan `-r` agar disort dari angka terbesar. `tr -s [:space:]` digunakan untuk menghapus spasi yang dihasilkan dari `uniq -c`. Setelah itu hasil disimpan pada variabel `sortederrorlog`
 
+- - - -
+
 ### 1c
 Untuk menampilkan jumlah error dan info setiap user, maka dibutuhkan group ke 3 dari regex pertama yang telah dibuat. Cara pengambilan group ke 3 regex menggunakan cara yang sama seperti pada 1b
 ```bash
@@ -87,6 +91,8 @@ done < "$input")
 sorteduserlog=$(echo $userlog | sort | uniq | sort)
 ```
 Proses pembacaan juga dilakukan per line dari input dengan menggunakan `while`. Hasil disort dan diambil nama-nama yang tidak sama dan diurutkan sesuai abjad
+
+- - - -
 
 ### 1d
 Untuk menampilkan informasi yang disediakan di 1b dan memformat penulisan agar sesuai dengan format .csv dapat dilakukan dengan melakukan print pada `sortederrorlog` yaitu pesan log yang telah diurutkan sesuai jumlah pesan.
@@ -115,6 +121,8 @@ Setelah melakukan filtering, setiap line dari variabel `sortederrorlog` diprint 
 
 Setelah selesai, output dimasukkan pada file error message.csv
 
+- - - -
+
 ### 1e
 Untuk menampilkan informasi yang didapat dari poin c ke dalam file user_statistic.csv dapat dilakukan dengan cara yang hampir sama dengan 1d
 ```bash
@@ -129,6 +137,8 @@ do
 done >> "user_statistic.csv"
 ```
 Variabel `error` dan `info` digunakan untuk mengambil line yang beris error dan info dari input. Lalu setiap line dari variabel `sorteduserlog` diprint dan dicari kemunculan user pada line yang dibaca saat itu pada variabel `error` dan `info` dan kemudian diprint. Setelah selesai diprint, output dimasukkan ke user_statistic.csv
+
+- - - -
 
 ## NO 2
 Pada pengerjaan soal no 2 ini, dibutuhkan data TokoShiSop. Sehingga dilakukan input file data tersebut yaitu "Laporan-TokoShiSop.tsv"
@@ -162,6 +172,8 @@ END
 - Lalu dilakukan pengecekan untuk mendapatkan profit maksimal sampai semua data yang ada selesai dicek dengan cara setiap pengecekan apakah presentase profit lebih besar dari
   profit terbesar sekarang. Jika iya maka profit terbesar akan diubah beserta idnya, dengan inisialisasi awal profit terbesar dan id adalah 0. 
 
+- - - -
+
 ### 2b
 Clemong membutuhkan daftar nama customer pada transaksi tahun 2017 di Albuquerque.
 ```bash
@@ -180,6 +192,8 @@ END
 ```
 - Proses akan dilakukan ketika Baris != 1
 - Dilakukan pengecekan apakah kolom 10 atau _city_ adalah Alburquerque dan kolom 3 atau_ date _ adalah pada tahun 2017, maka _customer name_ akan disimpan ke dalam array
+
+- - - -
 
 ### 2c
 Clemong membutuhkan segment customer dan jumlah transaksinya yang paling sedikit.
@@ -204,6 +218,8 @@ END
 - Proses akan dilakukan ketika Baris != 1
 - Dilakukan pengecekan apakah kolom 8 atau _segmen_ adalah "Consumer" bukan. Jika iya maka akan dilakukan penjumlahan variabel consumer dimana variabel tersebut berguna untuk menyimpan jumlah _segmen_ yang bertipe Customer pada data Laporan-TokoShiSop.tsv
 - Pengecekan yang sama juga dilakukan untuk _segmen_ bertipe Home Office dan Corporate
+
+- - - -
 
 ### 2d
 Wilayah bagian (region) yang memiliki total keuntungan (profit) paling sedikit dan total keuntungan wilayah tersebut.
@@ -252,6 +268,8 @@ END{
 - Proses akan dilakukan ketika Baris != 1
 - 
 
+- - - -
+
 ### 2e
 Membuat sebuah script yang akan menghasilkan file “hasil.txt”
 ```
@@ -288,5 +306,6 @@ Data jumlah Segmen bertipe Customer, Home Ofiice, dan Corperate yang didapatkan 
 ```
 Menyimpan wilayah dengan total profit paling sedikit beserta total profitnya ke dalam file "hasil.txt"
 
+- - - -
 
 ## NO 3
