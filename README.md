@@ -6,7 +6,7 @@ Dias Tri Kurniasari | 05111940000035
 Akmal Zaki Asmara | 05111940000154
 M. Fikri Sandi Pratama | 05111940000195
 
-List of Contents :
+## List of Contents :
 - [No 1](#no-1)
 	- [1a](#1a)
 	- [1b](#1b)
