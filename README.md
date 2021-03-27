@@ -6,6 +6,21 @@ Dias Tri Kurniasari | 05111940000035
 Akmal Zaki Asmara | 05111940000154
 M. Fikri Sandi Pratama | 05111940000195
 
+List of Contents :
+- [No 1](#no-1)
+	- [1a](#1a)
+	- [1b](#1b)
+	- [1c](#1c)
+	- [1d](#1d)
+	- [1e](#1e)
+- [No 2](#no-2-:-tokoshisop)
+	- [2a](#2a)
+	- [2b](#2b)
+	- [2c](#2c)
+	- [2d](#2d)
+	- [2e](#2e)
+- No 3
+
 ## NO 1 
 Pada pengerjaan soal no 1 ini, dibutuhkan data dari syslog.log. Sehingga dilakukan input file data tersebut yaitu
 ```bash
