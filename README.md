@@ -13,7 +13,7 @@ List of Contents :
 	- [1c](#1c)
 	- [1d](#1d)
 	- [1e](#1e)
-- [No 2](#no-2-:-tokoshisop)
+- [No 2](#no-2)
 	- [2a](#2a)
 	- [2b](#2b)
 	- [2c](#2c)
@@ -130,7 +130,7 @@ done >> "user_statistic.csv"
 ```
 Variabel `error` dan `info` digunakan untuk mengambil line yang beris error dan info dari input. Lalu setiap line dari variabel `sorteduserlog` diprint dan dicari kemunculan user pada line yang dibaca saat itu pada variabel `error` dan `info` dan kemudian diprint. Setelah selesai diprint, output dimasukkan ke user_statistic.csv
 
-## NO 2 : TokoShiSop
+## NO 2
 Pada pengerjaan soal no 2 ini, dibutuhkan data TokoShiSop. Sehingga dilakukan input file data tersebut yaitu "Laporan-TokoShiSop.tsv"
 ```bash
 export LC_ALL=C
