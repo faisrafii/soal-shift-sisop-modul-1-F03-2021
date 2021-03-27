@@ -1,44 +1,52 @@
 #!/bin/bash
-data_namafile () {
-if [ $1 -le 9 ]
-then
-        namafile="Koleksi_0$1.jpg"
-fi
-}
 
-for ((i=1; i<=23; i++))
+size=23
+for(( i=1 ; i<=size; i++ ))
 do
-        wget -a Foto.log https://loremflickr.com/320/240/kitten -O "Koleksi_$i.jpg"
-        for ((j=1; j<i; j++))
-        do
- 	      	if comm Koleksi_$i.jpg Koleksi_$j.jpg &> /dev/null
-                then
-                        rm Koleksi_$i.jpg
-                        break
-                fi
-        done
-done
-
-for ((i=1; i<=23; i++))
-do
-	if [ ! -f Koleksi_$i.jpg ];
-	then
-		for ((j=23; j>i; j--))
-		do
-			if [ -f Koleksi_$j.jpg ];
+	wget -O "Koleksi_$i" -a "Foto.log" https://loremflickr.com/320/240/kitten
+	for (( j=1 ; j<i ; j++ ))
+	do
+		if [[ j -lt 10 ]]
+		then
+			if cmp -s "Koleksi_$i" "Koleksi_0$j"
 			then
-				mv Koleksi_$j.jpg Koleksi_$i.jpg
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+			fi
+		else
+			if cmp -s "Koleksi_$i" "Koleksi_$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
 				break
 			fi
-		done
+		fi
+	done
+
+	if [[ i -lt 10 ]]
+	then
+		mv "Koleksi_$i" "Koleksi_0$i"
 	fi
 done
 
-for ((i=1; i<10; i=i+1))
-do
-	data_namafile "$i"
-	if [ -f Koleksi_$i.jpg ]
-	then
-		mv Koleksi_$i.jpg $namafile
-	fi
-done
+# files=$(find -regextype posix-extended -regex 'Koleksi_[0-9]$')
+# counter=0
+# for image in $files
+# do
+# 	if [[ counter -lt 10 ]]
+# 	then
+# 		mv $image "Koleksi_0$counter"
+# 	else
+# 		mv $image "Koleksi_$counter"
+# 	fi
+# 	(( counter++ ))
+# done
+
+# check_pic(){
+# 	dledpic=$1
+# 	pic=$2
+# 	for i in {1..$1
+# 	do 
+# }

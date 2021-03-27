@@ -2,23 +2,123 @@
 
 ## NO 1 
 Pada pengerjaan soal no 1 ini, dibutuhkan data dari syslog.log. Sehingga dilakukan input file data tersebut yaitu
-```
+```bash
 input="syslog.log"
 ```
 
 ### 1a
-Untuk mengumpulkan informasi dari syslog berupa jenis log (ERROR/INFO), pesan log, dan username pada setiap baris lognya. Diperluakn
+Untuk mengumpulkan informasi dari syslog berupa jenis log (ERROR/INFO), pesan log, dan username pada setiap baris lognya. Diperlukan adanya regex untuk memfilter kolom dari syslog
+```bash
+regex="(ERROR |INFO )(.*) \((.*)\)"
+```
+Regex diatas terbagi menjadi 3 bagian yaitu :
+1. (ERROR|INFO) akan mencari line yang mengandung kata error atau info dan menjadikannya sebagai regex group 1 yang akan menampilkan jenis log
+2. (.*) akan mengambil karakter sembarang dengan jumlah 0 hingga tak terbatas setelah ERROR atau INFO dan menjadikannya sebagai regex group 2 yang akan menampilkan pesan log
+3. \((.*)\) akan mengambil karakter sembarang dengan jumlah 0 hingga tak terbatas setelah group 2 dan setelah karakter '(' dan sebelum karakter ')' dan menjadikannya sebagai regex group 3 yang akan menampilkan username
+
+### 1b
+Untuk menampilkan pesan error dan jumlah kemunculannya, maka kita dapat memodifikasi regex sebelumnya menjadi :
+```bash
+regex2="(ERROR )(.*) \((.*)\)"
+```
+Regex dimodifikasi agar regex hanya mencari line yang memiliki kata ERROR saja
+```bash
+get_error_log(){
+	local s=$1 regex=$2 
+	while [[ $s =~ $regex ]]; do
+		printf "${BASH_REMATCH[2]}\n"
+		s=${s#*"${BASH_REMATCH[0]}"}
+	done
+}
+```
+Fungsi get_error_log berfungsi untuk mendapatkan grup ke 2 dari regex group yang berisi pesan log
+
+```bash
+IFS=
+errorlog=$(
+while read -r line
+do
+	get_error_log "$line" "$regex2"
+done < "$input")
+
+sortederrorlog=$(echo $errorlog | sort | uniq -c | sort -nr | tr -s [:space:])
+```
+Fungsi `get_error_log` akan dijalankan setiap pembacaan line pada input yaitu syslog.log menggunakan regex yang telah dimodifikasi. IFS= digunakan untuk menyimpan formatting '\n' agar tidak hilang ketika dimasukkan kedalam variabel errorlog
+
+Hasil dari proses filtering menggunakan regex diurutkan dengan `sort` agar dapat diambil jumlah pesan yang berbeda dengan `uniq -c`. Setelah dicari jumlah pesan berbeda, hasil di sort kembali berdasarkan angka dengan `sort -n` dan `-r` agar disort dari angka terbesar. `tr -s [:space:]` digunakan untuk menghapus spasi yang dihasilkan dari `uniq -c`. Setelah itu hasil disimpan pada variabel `sortederrorlog`
+
+### 1c
+Untuk menampilkan jumlah error dan info setiap user, maka dibutuhkan group ke 3 dari regex pertama yang telah dibuat. Cara pengambilan group ke 3 regex menggunakan cara yang sama seperti pada 1b
+```bash
+get_user_log(){
+	local s=$1 regex=$2
+	while [[ $s =~ $regex ]]; do
+		printf "${BASH_REMATCH[3]}\n"
+		s=${s#*"${BASH_REMATCH[0]}"}
+	done
+}
+userlog=$(
+while read -r line
+do
+	get_user_log "$line" "$regex"
+done < "$input")
+
+sorteduserlog=$(echo $userlog | sort | uniq | sort)
+```
+Proses pembacaan juga dilakukan per line dari input dengan menggunakan `while`. Hasil disort dan diambil nama-nama yang tidak sama dan diurutkan sesuai abjad
+
+### 1d
+Untuk menampilkan informasi yang disediakan di 1b dan memformat penulisan agar sesuai dengan format .csv dapat dilakukan dengan melakukan print pada `sortederrorlog` yaitu pesan log yang telah diurutkan sesuai jumlah pesan.
+```bash
+printf "Error,Count\n" >> "error_message.csv"
+echo "$sortederrorlog" | grep -oP "^ *[0-9]+ \K.*" | while read -r line
+do
+	count=$(grep "$line" "$input" | wc -l)
+	printf "$line,$count\n"
+	
+done >> "error_message.csv"
+```
+Sebelum diprint, kita perlu untuk mengambil pesan lognya saja pada variabel `sortederrorlog`
+```bash
+grep -oP "^ *[0-9]+ \K.*"
+```
+Regex pada grep diatas bermakna bahwa :
+1. Kita akan mengambil line yang diawali dengan spasi dengan jumlah 0 sampa dengan tak terhingga (^ *),
+2. Diikuti dengan angka dengan jumlah 1 sampai dengan tak terhingga [0-9]+,
+3. Setelah itu dikuti dengan spasi
+4. Dan regex matchnya akan dimulai setelah spasi dilanjutkan sampai karakter terserah dengan jumlah 0 hingga tak terhingga \K.*
+```bash
+grep "$line" "$input" | wc -l
+```
+Setelah melakukan filtering, setiap line dari variabel `sortederrorlog` diprint dan dicari jumlah kemunculannya pada file syslog.log dengan menggunakan `wc -l` dan diprint juga jumlahnya.
+
+Setelah selesai, output dimasukkan pada file error message.csv
+
+### 1e
+Untuk menampilkan informasi yang didapat dari poin c ke dalam file user_statistic.csv dapat dilakukan dengan cara yang hampir sama dengan 1d
+```bash
+error=$(grep "ERROR" "$input") 
+info=$(grep "INFO" "$input")
+printf "Username,INFO,ERROR\n" >> "user_statistic.csv"
+echo "$sorteduserlog" | while read -r line
+do
+	errcount=$(echo "$error" | grep -w "$line" | wc -l)
+	infocount=$(echo "$info" | grep -w "$line" | wc -l)
+	printf "$line,$infocount,$errcount\n"
+done >> "user_statistic.csv"
+```
+Variabel `error` dan `info` digunakan untuk mengambil line yang beris error dan info dari input. Lalu setiap line dari variabel `sorteduserlog` diprint dan dicari kemunculan user pada line yang dibaca saat itu pada variabel `error` dan `info` dan kemudian diprint. Setelah selesai diprint, output dimasukkan ke user_statistic.csv
 
 ## NO 2 : TokoShiShop
 Pada pengerjaan soal no 2 ini, dibutuhkan data TokoShiSop. Sehingga dilakukan input file data tersebut yaitu "Laporan-TokoShiSop.tsv"
-```
+```bash
 export LC_ALL=C
 input="/home/zaki/Downloads/Laporan-TokoShiSop.tsv"
 ```
 
 ### 2a 
 Steven ingin mengetahui Row ID dan profit percentage terbesar
-```
+```bash
 awk -F "\t" '
 BEGIN{ max=0;idmax=0}
 {
@@ -43,7 +143,7 @@ END
 
 ### 2b
 Clemong membutuhkan daftar nama customer pada transaksi tahun 2017 di Albuquerque.
-```
+```bash
 awk -F "\t" '
 BEGIN{printf "Daftar nama customer di Albuquerque pada tahun 2017 antara lain: \n"}
 {
@@ -62,7 +162,7 @@ END
 
 ### 2c
 Clemong membutuhkan segment customer dan jumlah transaksinya yang paling sedikit.
-```
+```bash
 awk -F "\t" '
 BEGIN{consumer=0;homeoffice=0;corp=0}
 {
@@ -86,13 +186,23 @@ END
 
 ### 2d
 Wilayah bagian (region) yang memiliki total keuntungan (profit) paling sedikit dan total keuntungan wilayah tersebut.
-```
+```bash
 awk -F "\t" '
 BEGIN{}
 {
 	{if(NR!=1)
 		arr[$13]+= $21
 	}
+#	{if(NR!=1)
+#	printf "%f %f\n",$21,min
+#		{if($21 < min)
+#			{
+#				printf "compared\n"
+#				min=$21
+#				regionmin=$13
+#			}
+#		}
+#	}
 }
 END{
 	a=0;
@@ -119,8 +229,7 @@ END{
 ' "$input" >> hasil.txt
 ```
 - Proses akan dilakukan ketika Baris != 1
-- Menyimpan total profit dari setiap region dengan menggunakan array yang memiliki index region dan valuenya adalah jumlah dari profit
-- Setelah semua data selesai di proses, dilanjutkan dengan pencarian total profit yang paling sedikit. Pertama diinisialisasi bahwa yang terkecil adalah region paling awal. Lalu ketika dilakukan pengecekan untuk region selanjutnya, profitnya lebih kecil dari yang sekarang maka profit terkecilnya beserta regionnya akan diganti. Proses tersebut dilakukan sampai semua region telah dicek.
+- 
 
 ### 2e
 Membuat sebuah script yang akan menghasilkan file “hasil.txt”
