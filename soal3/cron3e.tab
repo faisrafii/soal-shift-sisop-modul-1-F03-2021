@@ -1,0 +1,7 @@
+#zip
+0 7 * * 1-5 bash soal3d.sh
+
+#unzip
+kolunzip="%m%d%Y"
+password=$(date +"$kolunzip")
+0 18 * * 1-5 unzip -P $password Koleksi.zip && rm Koleksi.zip
