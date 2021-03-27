@@ -13,7 +13,7 @@ List of Contents :
 	- [1c](#1c)
 	- [1d](#1d)
 	- [1e](#1e)
-- [No 2](#no-2-:-tokoshisop)
+- [No 2](#no-2-\:-tokoshisop)
 	- [2a](#2a)
 	- [2b](#2b)
 	- [2c](#2c)
