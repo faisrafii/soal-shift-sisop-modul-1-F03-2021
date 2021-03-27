@@ -19,7 +19,12 @@ M. Fikri Sandi Pratama | 05111940000195
 	- [2c](#2c)
 	- [2d](#2d)
 	- [2e](#2e)
-- No 3
+- [No 3](#no-3)
+	- [3a](#3a)
+	- [3b](#3b)
+	- [3c](#3c)
+	- [3d](#3d)
+	- [3e](#3e)
 
 ## NO 1 
 Pada pengerjaan soal no 1 ini, dibutuhkan data dari syslog.log. Sehingga dilakukan input file data tersebut yaitu
@@ -308,4 +313,129 @@ Menyimpan wilayah dengan total profit paling sedikit beserta total profitnya ke 
 
 - - - -
 
-## NO 3
+## NO 3 : Koleksi Foto Foto
+
+### 3a
+Membuat script untuk mengunduh 23 gambar dari "https://loremflickr.com/320/240/kitten"
+kemudian menyimpan log-nya ke file "Foto.log". dengan syarat
+gambar tidak boleh sama dan penamaan harus Koleksi_01, dan seterusnya.
+```bash
+size=23
+for(( i=1 ; i<=size; i++ ))
+do
+	wget -O "Koleksi_$i" -a "Foto.log" https://loremflickr.com/320/240/kitten
+	for (( j=1 ; j<i ; j++ ))
+	do
+		if [[ j -lt 10 ]]
+		then
+			if cmp -s "Koleksi_$i" "Koleksi_0$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+			fi
+		else
+			if cmp -s "Koleksi_$i" "Koleksi_$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+				break
+			fi
+		fi
+	done
+
+	if [[ i -lt 10 ]]
+	then
+		mv "Koleksi_$i" "Koleksi_0$i"
+	fi
+done
+```
+#### PENJELASAN 3a
+
+```bash
+wget -O "Koleksi_$i" -a "Foto.log" https://loremflickr.com/320/240/kitten
+```
+`wget` untuk mengunduh gambar, `-O` agar gambar yang diunduh Original, `-a` agar alamat unduhan yang tampil
+di terminal ketika dijalankan dimasukkan ke dalam file "Foto.log"
+
+```bash
+if [[ j -lt 10 ]]
+		then
+			if cmp -s "Koleksi_$i" "Koleksi_0$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+			fi
+		else
+			if cmp -s "Koleksi_$i" "Koleksi_$j"
+			then
+				rm "Koleksi_$i"
+				(( i-- ))
+				(( size-- ))
+				break
+			fi
+		fi
+```
+Command diatas berfungsi untuk melakukan pengecekan terhadap foto yang duplicate setelah di download, 
+dengan cara melakukan perbandingan dengan command `cmp` kemudian membandingkan dengan foto ke i dan j atau sebelum dan sesudahnya,
+command diatas memiliki dua syarat karena penamaan file yang satuan (tedapat angak 0 dideoan) dan non satuan,
+ketika terdapat yang sama maka akan di hapus dengan menggunakan command `rm`.
+
+```bash
+if [[ i -lt 10 ]]
+	then
+		mv "Koleksi_$i" "Koleksi_0$i"
+	fi
+```
+untuk mengganti nama file dari `koleksi_$i` menjadi `Koleksi_0$i` di tambahkan dengan 0 didalamnya karena satuan yang dimulai dari `i -lt 10`.
+untuk mengganti nama file sendiri menggunakan command `mv`.
+
+### 3b 
+Menjalankan script sehari sekali pada jam 8 malam dengan syarat
+tanggal 1 tujuh hari sekali dan tanggal 2 empat hari sekali
+kemudian gambar yang di unduh beserta lognya dipindahkan ke folder baru
+dengan nama tanggal unduhnya
+### 3b (bash)
+```bash
+datee="%m-%d-%Y"
+file=$(date +"$datee")
+mkdir $file
+
+mv *.jpg $file
+mv Foto.log $file
+```
+### 3b crontab
+```bash
+0 20 1, 8, 15, 22, 29 * * bash soal3b.sh
+0 20 2, 6, 10, 14, 18, 26, 30 * * bash soal3b.sh
+```
+
+### 3c
+Mengunduh gambar kucing dan kelinci secara bergantian dan membuatkannya
+folder dengan nama awalan kucing dan kelinci
+
+### 3d
+Membuat zip untuk memindahkan seluruh folder dan menguncinya 
+menggunakan password
+```bash
+kolzip="%m%d%Y"
+pass=$(date +"$kolzip")
+
+zip -P $pass -r Koleksi.zip */
+```
+
+### 3e
+Membuat koleksi ter-zip di jam kuliahnya saja selain itu ter-unzip
+dan tidak ada file zip sama sekali
+```bash
+#zip
+0 7 * * 1-5 bash soal3d.sh
+
+#unzip
+kolunzip="%m%d%Y"
+password=$(date +"$kolunzip")
+0 18 * * 1-5 unzip -P $password Koleksi.zip && rm Koleksi.zip
+```
+
